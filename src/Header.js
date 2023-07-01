@@ -7,13 +7,18 @@ import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import ChatIcon from '@mui/icons-material/Chat';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { auth } from './firebase';
-import { logout } from './features/userSlice';
+import { logout, selectUser,  } from './features/userSlice';
+import { useDispatch, useSelector,  } from 'react-redux';
 
 function Header() {
+ const user = useSelector(selectUser);
+
+  const dispatch = useDispatch()
 
   const logoutOfApp = () => {
-    dispatchEvent(logout())
+    dispatch(logout())
     auth.signOut()
   };
   return (
@@ -35,9 +40,9 @@ function Header() {
         <HeaderOption Icon={BusinessCenterIcon} title="Jobs"/>
         <HeaderOption Icon={ChatIcon} title="Messaging" />
         <HeaderOption Icon={NotificationsIcon} title="Notifications"/>
-        <HeaderOption avatar={"https://drive.google.com/file/d/1t4hQsib_UFuuI5sKxUTG6w-igvZ6qWZx/view?usp=drive_link"} 
-        title='Me'
-        onClick={logoutOfApp} />
+        {!user ? (<HeaderOption Icon={AccountCircleIcon} title="Me" />) : 
+        (<HeaderOption avatar={user.displayName[0]} title='Me'
+        onClick={logoutOfApp} />)}
       </div>
     
     </div>
